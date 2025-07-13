@@ -1,11 +1,12 @@
 package cmd
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"net"
 
-	client "github.com/AnhBigBrother/tcp-chat/internal"
+	client "github.com/AnhTTx13/tcp-chat/internal"
 )
 
 var (
@@ -20,7 +21,10 @@ func init() {
 }
 
 func Execute() {
-	conn, err := net.Dial("tcp", net.JoinHostPort(HOST, fmt.Sprintf("%d", PORT)))
+	tlsConf := tls.Config{
+		InsecureSkipVerify: true, // Disable server certificate chain verification
+	}
+	conn, err := tls.Dial("tcp", net.JoinHostPort(HOST, fmt.Sprintf("%d", PORT)), &tlsConf)
 	if err != nil {
 		fmt.Println(err)
 		return

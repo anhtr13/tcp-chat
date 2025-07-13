@@ -58,7 +58,7 @@ func (c *Client) HandleInput() {
 		args := strings.Split(input, " ")
 
 		if len(args) == 0 ||
-			(len(args) == 1 && args[0] != GET_USER_ROOMS && args[0] != GET_ALL_ROOMS) {
+			(len(args) == 1 && EVENT(args[0]) != GET_ROOMS) {
 			fmt.Printf("\r")
 			fmt.Println("Error: Wrong format.")
 			continue

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/AnhBigBrother/tcp-chat/cmd"
+import "github.com/AnhTTx13/tcp-chat/cmd"
 
 func main() {
 	cmd.Execute()
