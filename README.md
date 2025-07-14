@@ -20,7 +20,9 @@ A simple chat application using TCP socket with transport layer security(TLS).
 - First start the chat client:
   
   ```sh
-    tcp-chat [flag]
+    tcp-chat --host=[server host/ip] --port=[server port number]
+    # default: --host=localhost
+    #          --port=8080
   ```
 
 - To send something to the server:
@@ -45,8 +47,3 @@ A simple chat application using TCP socket with transport layer security(TLS).
 > /join room2       # Join room2
 > /msg Hello room2  # Send message to room2
 ```
-
-**Avaiable flags:**
-
-- `--host [string]`: Specify the host name/ip address of the server (default localhost).
-- `--port [int]`: Specify the port number of the server (default 8080).
