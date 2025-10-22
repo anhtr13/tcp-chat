@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net"
 
-	client "github.com/AnhTTx13/tcp-chat/internal"
+	client "github.com/anhtr13/tcp-chat/internal"
 )
 
 var (

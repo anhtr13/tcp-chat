@@ -1,18 +1,18 @@
 # TCP-Chat
 
-A simple chat application using TCP socket with transport layer security(TLS).
+A simple chat application to communicate with other devices on your local network via TCP socket. Protected with transport layer security (TLS).
 
 ## Getting Started
 
 **1. Prerequisites:**
   
 - [Go](https://go.dev/doc/install) installed
-- You also need a [tcp-chat server](https://github.com/AnhTTx13/tcp-chat-server) running somewhere to connect to.
+- You also need a [tcp-chat server](https://github.com/anhtr13/tcp-chat-server) running somewhere on your local network to connect to.
 
 **2. Install the repository:**
   
   ```sh
-    go install github.com/AnhTTx13/tcp-chat
+    go install github.com/anhtr13/tcp-chat@latest
   ```
 
 ## Usage
