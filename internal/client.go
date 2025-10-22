@@ -2,12 +2,13 @@ package client
 
 import (
 	"bufio"
-	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net"
 	"os"
 	"strings"
+	"time"
 )
 
 type Client struct {
@@ -20,28 +21,35 @@ func NewClient(conn net.Conn) *Client {
 	}
 }
 
-func (c *Client) HandleServerResponse() {
+func (c *Client) HandleServerMessages() {
+	reader := bufio.NewReader(c.conn)
 	for {
-		dec := gob.NewDecoder(c.conn)
-		msg := message{}
-		err := dec.Decode(&msg)
-
-		fmt.Printf("\033[2K\r")
+		data, err := reader.ReadBytes('\n')
 		if err == io.EOF {
 			fmt.Println("The server is down.")
 			os.Exit(1)
 		}
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Println("Error when reading message: ", err.Error())
 			os.Exit(1)
 		}
 
-		event, data := msg.Event, msg.Data
+		fmt.Printf("\033[2K\r")
+
+		msg := message{}
+		err = json.Unmarshal(data, &msg)
+		if err != nil {
+			fmt.Println("Cannot unmarshal payload: ", err.Error())
+			return
+		}
+
+		event, payload := msg.Event, msg.Payload
+
 		switch event {
 		case ERROR:
-			fmt.Println("Error:", data)
+			fmt.Println("Error:", payload)
 		case MESSAGE:
-			fmt.Println(data)
+			fmt.Println(payload)
 		}
 
 		fmt.Print("> ")
@@ -54,6 +62,7 @@ func (c *Client) HandleInput() {
 		fmt.Print("> ")
 		input, _ := reader.ReadString('\n')
 		input = strings.Trim(input, "\n")
+		input = strings.TrimSpace(input)
 
 		args := strings.Split(input, " ")
 
@@ -64,16 +73,17 @@ func (c *Client) HandleInput() {
 			continue
 		}
 
-		msg := message{
-			Event: EVENT(args[0]),
-			Data:  strings.Join(args[1:], " "),
-		}
-
-		enc := gob.NewEncoder(c.conn)
-		err := enc.Encode(msg)
+		c.conn.SetWriteDeadline(time.Now().Add(2 * time.Second))
+		payload, _ := json.Marshal(
+			message{
+				Event:   EVENT(args[0]),
+				Payload: strings.Join(args[1:], " "),
+			},
+		)
+		payload = append(payload, '\n')
+		_, err := c.conn.Write(payload)
 		if err != nil {
 			fmt.Println(err.Error())
-			os.Exit(1)
 		}
 	}
 }

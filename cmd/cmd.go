@@ -34,6 +34,6 @@ func Execute() {
 	c := client.NewClient(conn)
 	fmt.Printf("Connected to %s, port %d.\n", HOST, PORT)
 
-	go c.HandleServerResponse()
+	go c.HandleServerMessages()
 	c.HandleInput()
 }
